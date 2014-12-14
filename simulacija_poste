@@ -1,0 +1,384 @@
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <ctime>
+using namespace std;
+#include "red_pokazivac.h"
+//#include "red_polje.h"
+
+int vrij=0;
+int adi=1,bdi=1,cdi=1,ddi=1,edi=1;
+
+void prioritet(int broj){
+     switch(broj){
+               case 1: cout<<" 1 VIP "; break;
+               case 2: cout<<" 2 Invalid "; break;
+               case 3: cout<<" 3 Trudnica "; break;
+               case 4: cout<<" 4 Umirovljenik "; break;
+               case 5: cout<<" 5 Ostali "; break;
+               }
+     }
+
+void posao(int broj){
+      switch(broj){
+               case 1: cout<<" 1 Predaja/preuzimanje posiljke "; break;
+               case 2: cout<<" 2 PLacanje racuna "; break;
+               case 3: cout<<" 3 Uplata lutrije "; break;
+               case 4: cout<<" 4 Western Union "; break;
+               case 5: cout<<" 5 EvoTV "; break;
+               }
+     }
+
+void ispis_klijenata(klijent x){
+        
+        cout<<endl;
+        
+        cout<<" Ime: "<<x.ime<<endl;
+        cout<<" Prezime: "<<x.prezime<<endl;
+        cout<<" Spol "<<x.spol<<endl;
+        cout<<" Datum rodjenja: "<<x.dan<<"."<<x.mj<<"."<<x.god<<endl;
+        prioritet(x.ci);
+        cout<<endl;
+        posao(x.di);
+        cout<<endl; 
+            
+        } 
+
+
+klijent gen_cetvorki(int ci){
+    klijent osoba;
+    string c="TF";
+    string g="MZ";
+    char r;
+    char musko_ime[10][30]={"Darko","Marko","Filip","Matija","Zeljko","Edvin","Darijo","Bruno","Ivan","Marjan"};
+    char zensko_ime[10][30]={"Dunja","Dijana","Lucija","Kristina","Mirjana","Lana","Suzana","Marija","Snjezana","Danijela"};
+    char prez[10][30]={"Skvorc","Modric","Vukojevic","Filipcic","Srnec","Pongrac","Horvat","Novak","Ferlin","Curin"};   
+    
+    if(ci==3){
+              strcpy(osoba.ime,zensko_ime[rand()%9]);
+              strcpy(osoba.prezime,prez[rand()%9]);
+              osoba.dan=1+rand()%31;
+              osoba.mj=1+rand()%12;
+              osoba.god=1970+rand()%21;
+              osoba.spol=g[1];
+              return osoba;
+              }   
+    else if(ci==4){
+         r=c[rand()%2];
+         if(r=='T'){
+                    strcpy(osoba.ime,zensko_ime[rand()%9]);
+                    osoba.spol=g[1];
+                    }
+         else if(r=='F'){
+              strcpy(osoba.ime,musko_ime[rand()%9]);
+              osoba.spol=g[0];
+              }
+         strcpy(osoba.prezime,prez[rand()%9]);
+         osoba.dan=1+rand()%31;
+         osoba.mj=1+rand()%12;
+         osoba.god=1920+rand()%20;
+         return osoba;
+         }   
+    else{
+         r=c[rand()%2];
+         if(r=='T'){
+                    strcpy(osoba.ime,zensko_ime[rand()%9]);
+                    osoba.spol=g[1];
+                    }
+         else if(r=='F'){
+                    strcpy(osoba.ime,musko_ime[rand()&9]);
+                    osoba.spol=g[0];
+              }
+         strcpy(osoba.prezime,prez[rand()%9]);
+         osoba.dan=1+rand()%31;
+         osoba.mj=1+rand()%12;
+         osoba.god=1950+rand()%50;
+         return osoba;
+         } 
+         }
+
+
+void prednost_prioritet(red* Q,klijent o){
+     red* Q2=InitQ(Q2);
+     klijent x,pom;
+     bool usla=false;
+     bool jed=true,odob=false;
+     while(!IsEmptyQ(Q)){
+                        pom=FrontQ(Q);
+                        EnQueueQ(pom,Q2);
+                        DeQueueQ(Q);
+                        }
+     while(!IsEmptyQ(Q2)){
+                         x=FrontQ(Q2);
+                         if(usla&&o.ci<x.ci&&jed){
+                                                  EnQueueQ(o,Q);
+                                                  jed=false;
+                                                  
+                                                  cout<<"          Osoba s vecim prioritetom"<<endl;
+                                                  ispis_klijenata(o);
+                                                  
+                                                  
+                                                  odob=true;
+                                                  }
+                         EnQueueQ(x,Q);
+                         DeQueueQ(Q2);
+                         usla=true;
+                         }
+     if(odob==false){
+                     EnQueueQ(o,Q);
+                     cout<<endl<<" Dolazak nove osobe: "<<endl;
+                     ispis_klijenata(o);
+                     
+                     }
+     }
+
+
+void ispis_uvjet(red* Q){
+     
+     red* pom_Q=InitQ(pom_Q);
+     while(!IsEmptyQ(Q)){
+                        klijent x; 
+                        x=FrontQ(Q);
+                        
+                        if(x.di==3 && ((x.dan>=22 && x.mj==12) || (x.dan<=20 && x.mj==1))&&((2014-x.god)<40))
+                        
+                        ispis_klijenata(x);
+                        
+                        EnQueueQ(x,pom_Q);
+                        DeQueueQ(Q);
+                        }  
+     
+     
+     while(!IsEmptyQ(pom_Q)){
+                        klijent x1;
+                        x1=FrontQ(pom_Q);
+                        EnQueueQ(x1,Q);     
+                        DeQueueQ(pom_Q);
+                             }        
+         }    
+
+void unos_klijenata(red* Q,int broj1){
+     red* pom_Q=InitQ(pom_Q);
+     srand(time(0));
+     bool prva=false;
+     klijent osoba,x,z;
+     int n;
+     cout<<endl;
+    
+     for(int i=0;i<=broj1;i++){
+            osoba.ai=10+rand()%491;
+            osoba.bi=80+rand()%791;
+            osoba.ci=1+rand()%5;
+            osoba.di=1+rand()%5;
+            x=gen_cetvorki(osoba.ci);
+            x.ai = osoba.ai;
+   	        x.bi = osoba.bi;
+            x.ci = osoba.ci;
+            x.di = osoba.di;
+            prednost_prioritet(Q,x);
+            vrij+=x.ai;
+            z=FrontQ(Q);
+            if(vrij>z.bi){
+                          ispis_klijenata(z);
+                          cout<<"je zavrsila sa radom u posti te sljedi sljedeca osoba!"<<endl;
+                          DeQueueQ(Q);
+                          vrij=0;
+                          }
+             }
+     cout<<endl;
+     cout<<" Ispis svih klijenta horoskopskog znaka Jarac mladjih od 40 godina i cekaju na uplatu lutrije"<<endl;
+     ispis_uvjet(Q);
+     }
+     
+     
+     
+
+
+
+void ispis_red(red* Q){
+     red* pom_Q=InitQ(pom_Q);
+     if(!IsEmptyQ(Q)){
+                      klijent x;
+                      x=FrontQ(Q);
+                      
+                      cout<<"Ime:"<<x.ime<<endl;
+                      cout<<"Prezime:"<<x.prezime<<endl;
+                      cout<<"Spol:"<<x.spol<<endl;
+                      cout<<"Datum rodjenja: "<<x.dan<<"."<<x.mj<<"."<<x.god<<endl;
+                      prioritet(x.ci);
+                      cout<<endl;
+                      posao(x.di);
+                      cout<<endl; 
+                      
+                      EnQueueQ(x,pom_Q);
+                      DeQueueQ(Q);
+     }
+     while(!IsEmptyQ(pom_Q)){
+                             klijent pom;
+                             pom=FrontQ(pom_Q);
+                             EnQueueQ(pom,Q);
+                             DeQueueQ(pom_Q);
+                             }
+     cout<<endl;
+     }
+   
+     
+void ispis_salter(red* Q,int posao){
+     red* pom_Q=InitQ(pom_Q);
+     while(!IsEmptyQ(Q)){
+                         klijent x;
+                         x=FrontQ(Q);
+                         if(x.di==posao)
+                         
+                         ispis_klijenata(x);
+                         
+                         EnQueueQ(x,pom_Q);
+                         DeQueueQ(Q);
+                         }
+     while(!IsEmptyQ(pom_Q)){
+                             klijent pom;
+                             pom=FrontQ(pom_Q);
+                             EnQueueQ(pom,Q);
+                             DeQueueQ(pom_Q);
+                             }
+     }  
+
+void izlaz_trudnice(red* Q){
+    red* pom_Q=InitQ(pom_Q);
+    while(!IsEmptyQ(Q)){
+                        klijent x;
+                        x=FrontQ(Q);
+                        EnQueueQ(x,pom_Q);
+                        DeQueueQ(Q);
+                        }
+     while(!IsEmptyQ(pom_Q)){
+                             klijent pom;
+                             pom=FrontQ(pom_Q);
+                             if(pom.ci!=3 && pom.di!=5)
+                             EnQueueQ(pom,Q);
+                             DeQueueQ(pom_Q);
+                             }
+     
+     }
+
+void prednost_prioritet_brzi(red* Q,klijent o){
+     red* pom_Q=InitQ(pom_Q);
+     klijent x,pom;
+     bool jed=true,odob=false;
+     while(!IsEmptyQ(Q)){
+                         pom=FrontQ(Q);
+                         EnQueueQ(pom,pom_Q);
+                         DeQueueQ(Q);
+                         }
+     while(!IsEmptyQ(pom_Q)){
+                             x=FrontQ(pom_Q);
+                             if(jed&&o.ci>=x.ci){
+                                                 if(x.ci==o.ci&&o.di<x.di){
+                                                                           EnQueueQ(o,Q);
+                                                                           jed=false;
+                                                                           odob=true;
+                                                                           }
+                                                              }
+                             EnQueueQ(x,Q);
+                             DeQueueQ(pom_Q);
+                             }
+     if(odob==false)
+     EnQueueQ(o,Q);
+     }
+
+void brza_linija(red* Q,red* n){
+     if(IsEmptyQ(Q))
+     return;
+     klijent x=FrontQ(Q);
+     DeQueueQ(Q);
+     brza_linija(Q,n);
+     if(x.ci==4)
+                prednost_prioritet_brzi(n,x);
+     else if(x.di==1&&adi<=2)
+                              prednost_prioritet_brzi(n,x),adi++;
+     else if(x.di==2&&bdi<=2)
+                              prednost_prioritet_brzi(n,x),bdi++;
+     else if(x.di==3&&cdi<=2)
+                             prednost_prioritet_brzi(n,x),cdi++;
+     else if(x.di==4&&ddi<=2)
+                             prednost_prioritet_brzi(n,x),ddi++;
+     else if(x.di==5&&edi<=2)
+                             prednost_prioritet_brzi(n,x),edi++;
+     else EnQueueQ(x,Q);
+     return;
+     }
+
+void brza_linija_okreni(red* Q){
+     if(IsEmptyQ(Q))
+     return ;
+     klijent x=FrontQ(Q);
+     DeQueueQ(Q);
+     brza_linija_okreni(Q);
+     EnQueueQ(x,Q);
+     }
+
+int main(){
+    
+    red* Q=InitQ(Q);
+    red* n=InitQ(n);
+    int izbor,broj1;
+    do{
+        cout<<" ----------------------------------------------- "<<endl;
+        cout<<"           STRUKTURE PODATAKA 3 ZAD "<<endl;
+        cout<<"                    izbornik!         "<<endl;
+        cout<<" 1 Ulazak klijenata u postanski ured "<<endl;
+        cout<<" 2 Izlazak trudnica "<<endl;
+        cout<<" 3 Stanje u redu "<<endl;
+        cout<<" 4 Otvaranje brzog saltera "<<endl;
+        cout<<" 5 Ispis brze linije i pojedinog saltera "<<endl;
+        cout<<" 9 izlaz "<<endl;
+        cout<<" ----------------------------------------------- "<<endl;
+        cin>>izbor;
+        switch(izbor){
+                      case 1: 
+                           cout<<"Koliki broj klijenata zelite?:";
+                           cin>>broj1;
+                           unos_klijenata(Q,broj1);
+                           break;
+                      case 2: 
+                           izlaz_trudnice(Q);
+                           cout<<"Trudnice su napustile salter za EvoTV"<<endl;
+                           break;
+                      case 3: 
+                           for(int i=0;i<=broj1;i++)
+                           ispis_red(Q);
+                           break;
+                      case 4: 
+                           
+                           brza_linija(Q,n),brza_linija_okreni(Q),brza_linija_okreni(n);
+                           cout<<endl;
+                           cout<<"Klijenti su prebačeni u brzu liniju"<<endl;
+                           break;
+                      case 5: 
+                          
+                           cout<<" Ispis brze linije: "<<endl;
+                           ispis_red(n);
+                           cout<<endl;
+                           cout<<"Predaja/preuzimanje posiljke"<<endl;
+                           ispis_salter(Q,1);
+                           cout<<endl;
+                           cout<<"Placanje racuna"<<endl;
+                           ispis_salter(Q,2);
+                           cout<<endl;
+                           cout<<"Uplata lutrije"<<endl;
+                           ispis_salter(Q,3);
+                           cout<<endl;
+                           cout<<"Western Union"<<endl;
+                           ispis_salter(Q,4);
+                           cout<<endl;
+                           cout<<"EvoTV"<<endl;
+                           ispis_salter(Q,5);
+				              break;
+                    
+                      }
+        }while(izbor!=9);
+    
+    system("PAUSE");
+    return 0;
+}     
