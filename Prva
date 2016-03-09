@@ -1,0 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PrvaVjezba1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int desetka, jedinica, rezultat;
+            Console.WriteLine("Unesite deseticu:");
+            desetka = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Unesite jedinicu:");
+            jedinica = Convert.ToInt32(Console.ReadLine());
+            rezultat = ((jedinica * 10) + desetka) * 2;
+            Console.WriteLine(rezultat);
+            Console.Read();
+            
+
+        }
+    }
+}
